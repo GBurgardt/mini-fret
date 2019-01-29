@@ -1,0 +1,26 @@
+.game-container {
+    display: flex;
+
+    .frets-container {
+        display: flex;
+        width: 100%;
+
+        .fret {
+            display: block;            
+            // width: 100%;
+            width: -webkit-fill-available;
+            height: 89px;
+        }
+
+        .fret-1 { background: red; }
+        .fret-2 { background: blue; }
+        .fret-3 { background: yellow; }
+        .fret-4 { background: green; }
+        .fret-5 { background: orange; }
+
+        .guitar-pick {
+            background: black;
+            margin-left: 1%;
+        }
+    }
+}

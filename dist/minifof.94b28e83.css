@@ -1,0 +1,31 @@
+.game-container {
+  display: flex;
+}
+.game-container .frets-container {
+  display: flex;
+  width: 100%;
+}
+.game-container .frets-container .fret {
+  display: block;
+  width: -webkit-fill-available;
+  height: 89px;
+}
+.game-container .frets-container .fret-1 {
+  background: red;
+}
+.game-container .frets-container .fret-2 {
+  background: blue;
+}
+.game-container .frets-container .fret-3 {
+  background: yellow;
+}
+.game-container .frets-container .fret-4 {
+  background: green;
+}
+.game-container .frets-container .fret-5 {
+  background: orange;
+}
+.game-container .frets-container .guitar-pick {
+  background: black;
+  margin-left: 1%;
+}
