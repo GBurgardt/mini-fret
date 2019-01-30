@@ -1,31 +1,122 @@
+#main-content {
+  display: flex;
+  height: 100%;
+  flex: 1 1 auto;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 .game-container {
   display: flex;
+  flex-flow: column;
+  height: 100%;
+  flex: 1 1 auto;
+}
+.game-container .pad-container {
+  display: flex;
+  width: 100%;
+  height: 129px;
+}
+.game-container .pad-container .pad {
+  display: block;
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+}
+.game-container .pad-container .pad-1 {
+  background: green;
+}
+.game-container .pad-container .pad-2 {
+  background: red;
+}
+.game-container .pad-container .pad-3 {
+  background: yellow;
+}
+.game-container .pad-container .pad-4 {
+  background: blue;
+}
+.game-container .pad-container .pad-5 {
+  background: orange;
+}
+.game-container .pad-container .guitar-pick {
+  background: black;
+  margin-left: 1%;
+}
+.game-container .stage-container {
+  display: flex;
+  flex-flow: column;
+}
+.game-container .stage-container .string-container {
+  display: flex;
+  width: 98%;
+  height: 100%;
+  height: -moz-available;
+  height: -webkit-fill-available;
+  height: fill-available;
+  margin: 1% auto 0;
+}
+.game-container .stage-container .string-container .guitar-string {
+  display: block;
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+  background: #bcbcbc;
+  border: 1px solid;
+  border-bottom: none;
 }
 .game-container .frets-container {
   display: flex;
-  width: 100%;
+  width: 97.8%;
+  height: 48px;
+  margin: 0 auto;
+  border: 1px solid;
 }
 .game-container .frets-container .fret {
+  border: 1px solid;
   display: block;
+  width: 100%;
+  width: -moz-available;
   width: -webkit-fill-available;
-  height: 89px;
+  width: fill-available;
 }
 .game-container .frets-container .fret-1 {
-  background: red;
+  background: green;
 }
 .game-container .frets-container .fret-2 {
-  background: blue;
+  background: red;
 }
 .game-container .frets-container .fret-3 {
   background: yellow;
 }
 .game-container .frets-container .fret-4 {
-  background: green;
+  background: blue;
 }
 .game-container .frets-container .fret-5 {
   background: orange;
 }
-.game-container .frets-container .guitar-pick {
-  background: black;
-  margin-left: 1%;
+.game-container .frets-container .pressed {
+  background: #595f5f;
+}
+.game-container .btn-play {
+  position: absolute;
+  top: 38%;
+  left: 43%;
+  font-size: 3rem;
+}
+.game-container .simple-note {
+  border: 1px solid;
+  display: block;
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+  background: #632e79;
+  height: 8%;
+  position: relative;
 }

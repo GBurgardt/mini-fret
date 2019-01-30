@@ -104,7 +104,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"../../../AppData/Local/Yarn/Data/global/node_modules/process/browser.js":[function(require,module,exports) {
+})({"../../../../../usr/local/share/.config/yarn/global/node_modules/process/browser.js":[function(require,module,exports) {
 
 // shim for using process in browser
 var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
@@ -10683,7 +10683,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{"process":"../../../AppData/Local/Yarn/Data/global/node_modules/process/browser.js"}],"src/services/utils-service.js":[function(require,module,exports) {
+},{"process":"../../../../../usr/local/share/.config/yarn/global/node_modules/process/browser.js"}],"src/services/utils-service.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10702,7 +10702,39 @@ var createElementFromHTML = function createElementFromHTML(htmlString) {
 
 
 exports.createElementFromHTML = createElementFromHTML;
-},{}],"../../../AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{}],"src/services/notes-service.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getSimpleNote = void 0;
+
+var _jquery = _interopRequireDefault(require("jquery"));
+
+var _utilsService = require("./utils-service");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var getSimpleNote = function getSimpleNote() {
+  return {
+    elementNote: (0, _utilsService.createElementFromHTML)("<div class=\"simple-note\"></div>"),
+    itIsMoving: false
+  };
+};
+
+exports.getSimpleNote = getSimpleNote;
+(0, _jquery.default)(function () {
+  setInterval(function () {
+    var notes = (0, _jquery.default)(".simple-note");
+
+    if (notes && notes.length > 0) {
+      notes.css('top', '+=2');
+    }
+  }, 25);
+}); // $(".simple-note").css('top') ? 
+//                             $(".simple-note").css('top') + 5 : 5
+},{"jquery":"node_modules/jquery/dist/jquery.js","./utils-service":"src/services/utils-service.js"}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -10734,7 +10766,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],"../../../AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+},{}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -10769,31 +10801,73 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../../../AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/minifof/minifof.scss":[function(require,module,exports) {
+},{"./bundle-url":"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/minifof/minifof.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/minifof/minifof.js":[function(require,module,exports) {
+},{"_css_loader":"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/minifof/minifof-html.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.minifofHtml = void 0;
+var minifofHtml = "\n<div class=\"game-container\">\n    <div class=\"pad-container\">\n        <div class=\"pad pad-1\"></div>\n        <div class=\"pad pad-2\"></div>\n        <div class=\"pad pad-3\"></div>\n        <div class=\"pad pad-4\"></div>\n        <div class=\"pad pad-5\"></div>\n        <div class=\"pad guitar-pick\"></div>\n    </div>\n\n    <div class=\"stage-container\">\n        <div class=\"string-container\">\n            <div class=\"guitar-string string-1\"></div>\n            <div class=\"guitar-string string-2\"></div>\n            <div class=\"guitar-string string-3\"></div>\n            <div class=\"guitar-string string-4\"></div>\n            <div class=\"guitar-string string-5\"></div>\n        </div>\n\n        <div class=\"frets-container\">\n            <div class=\"fret fret-1\"></div>\n            <div class=\"fret fret-2\"></div>\n            <div class=\"fret fret-3\"></div>\n            <div class=\"fret fret-4\"></div>\n            <div class=\"fret fret-5\"></div>\n        </div>\n    </div>\n\n    <div class=\"btn-play\">\n        <p>Play</p>\n    </div>\n</div>\n";
+exports.minifofHtml = minifofHtml;
+},{}],"src/components/minifof/minifof.js":[function(require,module,exports) {
 "use strict";
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
 var _utilsService = require("../../services/utils-service");
 
+var _notesService = require("../../services/notes-service");
+
 require("./minifof.scss");
+
+var _minifofHtml = require("./minifof-html");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Dependencias
-// SCSS
+// minifof imports
 // HTML / Vista
-var vistaMiniFof = (0, _utilsService.createElementFromHTML)("\n    <div class=\"game-container\">\n        <div class=\"frets-container\">\n            <div class=\"fret fret-1\"></div>\n            <div class=\"fret fret-2\"></div>\n            <div class=\"fret fret-3\"></div>\n            <div class=\"fret fret-4\"></div>\n            <div class=\"fret fret-5\"></div>\n            <div class=\"fret guitar-pick\"></div>\n        </div>\n    </div>\n    "); // Monto la vista
+var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifofHtml); // On init..
 
 (0, _jquery.default)(function () {
-  (0, _jquery.default)("#replace-content").replaceWith(vistaMiniFof);
-});
-},{"jquery":"node_modules/jquery/dist/jquery.js","../../services/utils-service":"src/services/utils-service.js","./minifof.scss":"src/components/minifof/minifof.scss"}],"../../../AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+  (0, _jquery.default)("#replace-content").replaceWith(vistaMiniFof); // Cuando hace click en play, arranca todo.
+
+  (0, _jquery.default)(".btn-play")[0].addEventListener('click', function () {
+    (0, _jquery.default)(".btn-play").remove(); // Play.. Empieza a moverse todo
+
+    playGame();
+  });
+
+  var playGame = function playGame() {
+    var noteTest = (0, _notesService.getSimpleNote)();
+    (0, _jquery.default)('.guitar-string.string-1')[0].appendChild(noteTest.elementNote); // Movimiento
+
+    noteTest.itIsMoving = true;
+  };
+}); // Evento 'keydown'
+
+document.addEventListener('keydown', function (e) {
+  var keycode = e.keyCode;
+
+  if (keycode === 49 || keycode === 50 || keycode === 51 || keycode === 52 || keycode === 53) {
+    (0, _jquery.default)(".fret.fret-".concat(keycode - 50 + 2)).addClass('pressed');
+  }
+}, false); // Evento 'keyup'
+
+document.addEventListener('keyup', function (e) {
+  var keycode = e.keyCode;
+
+  if (keycode === 49 || keycode === 50 || keycode === 51 || keycode === 52 || keycode === 53) {
+    (0, _jquery.default)(".fret.fret-".concat(keycode - 50 + 2)).removeClass('pressed');
+  }
+}, false);
+},{"jquery":"node_modules/jquery/dist/jquery.js","../../services/utils-service":"src/services/utils-service.js","../../services/notes-service":"src/services/notes-service.js","./minifof.scss":"src/components/minifof/minifof.scss","./minifof-html":"src/components/minifof/minifof-html.js"}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -10820,7 +10894,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52346" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38181" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
@@ -10962,5 +11036,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../AppData/Local/Yarn/Data/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/components/minifof/minifof.js"], null)
+},{}]},{},["../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/components/minifof/minifof.js"], null)
 //# sourceMappingURL=/minifof.94b28e83.map
