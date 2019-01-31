@@ -104,7 +104,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"../../../../../usr/local/share/.config/yarn/global/node_modules/process/browser.js":[function(require,module,exports) {
+})({"../../../../../usr/local/lib/node_modules/parcel-bundler/node_modules/process/browser.js":[function(require,module,exports) {
 
 // shim for using process in browser
 var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
@@ -10683,7 +10683,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{"process":"../../../../../usr/local/share/.config/yarn/global/node_modules/process/browser.js"}],"src/services/utils-service.js":[function(require,module,exports) {
+},{"process":"../../../../../usr/local/lib/node_modules/parcel-bundler/node_modules/process/browser.js"}],"src/services/utils-service.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10734,7 +10734,7 @@ exports.getSimpleNote = getSimpleNote;
   }, 25);
 }); // $(".simple-note").css('top') ? 
 //                             $(".simple-note").css('top') + 5 : 5
-},{"jquery":"node_modules/jquery/dist/jquery.js","./utils-service":"src/services/utils-service.js"}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"jquery":"node_modules/jquery/dist/jquery.js","./utils-service":"src/services/utils-service.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -10766,7 +10766,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+},{}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -10801,12 +10801,12 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/minifof/minifof.scss":[function(require,module,exports) {
+},{"./bundle-url":"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/minifof/minifof.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/minifof/minifof-html.js":[function(require,module,exports) {
+},{"_css_loader":"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/minifof/minifof-html.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10836,20 +10836,111 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifofHtml); // On init..
 
 (0, _jquery.default)(function () {
-  (0, _jquery.default)("#replace-content").replaceWith(vistaMiniFof); // Cuando hace click en play, arranca todo.
+  ////////////////////////////////////////////////////////
+  //////////////////////// Init //////////////////////////
+  ////////////////////////////////////////////////////////
+  // Estado del juego
+  var state; // Id del intervalo (game loop) principal
 
-  (0, _jquery.default)(".btn-play")[0].addEventListener('click', function () {
-    (0, _jquery.default)(".btn-play").remove(); // Play.. Empieza a moverse todo
+  var mainIntervalId; // Tab actual
 
-    playGame();
-  });
+  var currentTab;
+  /**
+   * Inicializa eventos y otros
+   */
 
-  var playGame = function playGame() {
-    var noteTest = (0, _notesService.getSimpleNote)();
-    (0, _jquery.default)('.guitar-string.string-1')[0].appendChild(noteTest.elementNote); // Movimiento
+  var init = function init() {
+    //////// Eventos ////////
+    (0, _jquery.default)("#replace-content").replaceWith(vistaMiniFof); // Cuando hace click en play, arranca todo.
 
-    noteTest.itIsMoving = true;
+    (0, _jquery.default)(".btn-play")[0].addEventListener('click', function () {
+      var currentText = (0, _jquery.default)(".btn-play")[0] && (0, _jquery.default)(".btn-play")[0].firstElementChild ? (0, _jquery.default)(".btn-play")[0].firstElementChild.textContent : null;
+
+      if (currentText && currentText === 'Play') {
+        state = play;
+        (0, _jquery.default)(".btn-play")[0].firstElementChild.textContent = 'Pause';
+      } else {
+        state = paused;
+        (0, _jquery.default)(".btn-play")[0].firstElementChild.textContent = 'Play';
+      }
+    }); // Llamo a setup para inicializar todo
+
+    setup(null);
+  }; ////////////////////////////////////////////////////////
+  ////////////////////// End Init ////////////////////////
+  ////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////
+  ///////////////////// Life Cycle ///////////////////////
+  ////////////////////////////////////////////////////////
+
+  /**
+   * Initialize the game sprites, set the game `state` to `play`
+   * and start the 'gameLoop'
+   */
+
+
+  var setup = function setup() {
+    // Cargo la tab elegida (por el momento dejo una fija)
+    loadTab(); // Arranco el loop principal
+
+    gameLoop(null);
   };
+  /**
+   * Runs the current game `state` in a loop and renders the sprites
+   * @param {*} delta 
+   */
+
+
+  var gameLoop = function gameLoop(delta) {
+    // Por ahora dejo un setInterval
+    mainIntervalId = setInterval(function () {
+      state && state(delta);
+    }, 200);
+  };
+
+  var play = function play(delta) {
+    console.log('play');
+  };
+
+  var paused = function paused(delta) {
+    console.log('paused');
+  }; // const stop = (delta) => {
+  //     console.log('stop');
+  //     clearInterval(mainIntervalId);
+  // }
+
+  /**
+   * All the code that should run at the end of the game
+   */
+
+
+  var end = function end() {}; ////////////////////////////////////////////////////////
+  /////////////////// End Life Cycle /////////////////////
+  ////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////
+  ////////////////// Others functions ////////////////////
+  ////////////////////////////////////////////////////////
+
+  /**
+   * Carga la tab elegida
+   */
+
+
+  var loadTab = function loadTab() {
+    console.log('loadTab'); // Test..
+    // const noteTest = getSimpleNote();
+    // $('.guitar-string.string-1')[0]
+    //     .appendChild(
+    //         noteTest.elementNote
+    //     );
+    // noteTest.itIsMoving = true;
+  }; ////////////////////////////////////////////////////////
+  //////////////// End Others functions //////////////////
+  ////////////////////////////////////////////////////////
+  // Inicializo
+
+
+  init();
 }); // Evento 'keydown'
 
 document.addEventListener('keydown', function (e) {
@@ -10867,7 +10958,41 @@ document.addEventListener('keyup', function (e) {
     (0, _jquery.default)(".fret.fret-".concat(keycode - 50 + 2)).removeClass('pressed');
   }
 }, false);
-},{"jquery":"node_modules/jquery/dist/jquery.js","../../services/utils-service":"src/services/utils-service.js","../../services/notes-service":"src/services/notes-service.js","./minifof.scss":"src/components/minifof/minifof.scss","./minifof-html":"src/components/minifof/minifof-html.js"}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+/* Interesting example
+//Define any variables that are used in more than one function
+let cat, state;
+
+function setup() {
+
+  //Create the `cat` sprite 
+  cat = new Sprite(resources["images/cat.png"].texture);
+  cat.y = 96; 
+  cat.vx = 0;
+  cat.vy = 0;
+  app.stage.addChild(cat);
+
+  //Set the game state
+  state = play;
+ 
+  //Start the game loop 
+  app.ticker.add(delta => gameLoop(delta));
+}
+
+function gameLoop(delta){
+
+  //Update the current game state:
+  state(delta);
+}
+
+function play(delta) {
+
+  //Move the cat 1 pixel to the right each frame
+  cat.vx = 1
+  cat.x += cat.vx;
+}
+
+*/
+},{"jquery":"node_modules/jquery/dist/jquery.js","../../services/utils-service":"src/services/utils-service.js","../../services/notes-service":"src/services/notes-service.js","./minifof.scss":"src/components/minifof/minifof.scss","./minifof-html":"src/components/minifof/minifof-html.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -10894,7 +11019,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38181" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40191" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
@@ -11036,5 +11161,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/components/minifof/minifof.js"], null)
+},{}]},{},["../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/components/minifof/minifof.js"], null)
 //# sourceMappingURL=/minifof.94b28e83.map

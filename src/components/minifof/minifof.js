@@ -14,29 +14,128 @@ const vistaMiniFof = createElementFromHTML(
 
 // On init..
 $(function () {
-    $("#replace-content").replaceWith(vistaMiniFof)
 
-    // Cuando hace click en play, arranca todo.
-    $(".btn-play")[0].addEventListener('click', () => {
-        $(".btn-play").remove();
+    ////////////////////////////////////////////////////////
+    //////////////////////// Init //////////////////////////
+    ////////////////////////////////////////////////////////
 
-        // Play.. Empieza a moverse todo
+    // Estado del juego
+    let state;
 
-        playGame();
-    })
+    // Id del intervalo (game loop) principal
+    let mainIntervalId;
 
-    const playGame = () => {
+    // Tab actual
+    let currentTab;
 
-        const noteTest = getSimpleNote();
+    /**
+     * Inicializa eventos y otros
+     */
+    const init = () => {
+        //////// Eventos ////////
+        $("#replace-content").replaceWith(vistaMiniFof)
 
-        $('.guitar-string.string-1')[0]
-            .appendChild(
-                noteTest.elementNote
-            );
+        // Cuando hace click en play, arranca todo.
+        $(".btn-play")[0].addEventListener('click', () => {
+            const currentText = $(".btn-play")[0] && $(".btn-play")[0].firstElementChild ? 
+                $(".btn-play")[0].firstElementChild.textContent : null;
 
-        // Movimiento
-        noteTest.itIsMoving = true;
+            if (currentText && currentText === 'Play') {
+                state = play;
+                $(".btn-play")[0].firstElementChild.textContent = 'Pause';
+            } else {
+                state = paused;
+                $(".btn-play")[0].firstElementChild.textContent = 'Play';
+            }
+        });
+
+        // Llamo a setup para inicializar todo
+        setup(null);
     }
+
+    ////////////////////////////////////////////////////////
+    ////////////////////// End Init ////////////////////////
+    ////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////
+    ///////////////////// Life Cycle ///////////////////////
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Initialize the game sprites, set the game `state` to `play`
+     * and start the 'gameLoop'
+     */
+    const setup = () => {
+
+        // Cargo la tab elegida (por el momento dejo una fija)
+        loadTab();
+
+        // Arranco el loop principal
+        gameLoop(null);
+
+    }
+
+    /**
+     * Runs the current game `state` in a loop and renders the sprites
+     * @param {*} delta 
+     */
+    const gameLoop = (delta) => {
+
+        // Por ahora dejo un setInterval
+        mainIntervalId = setInterval(() => {
+            state && 
+                state(delta);
+        }, 200);
+    }
+
+    const play = (delta) => {
+        console.log('play');
+    }
+
+    const paused = (delta) => {
+        console.log('paused');
+    }
+    // const stop = (delta) => {
+    //     console.log('stop');
+    //     clearInterval(mainIntervalId);
+    // }
+
+    /**
+     * All the code that should run at the end of the game
+     */
+    const end = () => { }
+
+    ////////////////////////////////////////////////////////
+    /////////////////// End Life Cycle /////////////////////
+    ////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////
+    ////////////////// Others functions ////////////////////
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Carga la tab elegida
+     */
+    const loadTab = () => {
+        console.log('loadTab');
+
+        // Test..
+        // const noteTest = getSimpleNote();
+
+        // $('.guitar-string.string-1')[0]
+        //     .appendChild(
+        //         noteTest.elementNote
+        //     );
+
+        // noteTest.itIsMoving = true;
+    }
+
+    ////////////////////////////////////////////////////////
+    //////////////// End Others functions //////////////////
+    ////////////////////////////////////////////////////////
+
+    // Inicializo
+    init();
 
 });
 
@@ -50,18 +149,18 @@ document.addEventListener(
         var keycode = e.keyCode;
 
         if (
-            keycode === 49 || 
-            keycode === 50 || 
-            keycode === 51 || 
-            keycode === 52 || 
+            keycode === 49 ||
+            keycode === 50 ||
+            keycode === 51 ||
+            keycode === 52 ||
             keycode === 53
         ) {
             $(
                 `.fret.fret-${
-                    keycode - 50 + 2
+                keycode - 50 + 2
                 }`
             ).addClass('pressed');
-        }       
+        }
     },
     false
 );
@@ -73,18 +172,62 @@ document.addEventListener(
         var keycode = e.keyCode;
 
         if (
-            keycode === 49 || 
-            keycode === 50 || 
-            keycode === 51 || 
-            keycode === 52 || 
+            keycode === 49 ||
+            keycode === 50 ||
+            keycode === 51 ||
+            keycode === 52 ||
             keycode === 53
         ) {
             $(
                 `.fret.fret-${
-                    keycode - 50 + 2
+                keycode - 50 + 2
                 }`
             ).removeClass('pressed')
-        }       
+        }
     },
     false
 );
+
+
+
+
+
+
+
+
+
+
+/* Interesting example
+//Define any variables that are used in more than one function
+let cat, state;
+
+function setup() {
+
+  //Create the `cat` sprite 
+  cat = new Sprite(resources["images/cat.png"].texture);
+  cat.y = 96; 
+  cat.vx = 0;
+  cat.vy = 0;
+  app.stage.addChild(cat);
+
+  //Set the game state
+  state = play;
+ 
+  //Start the game loop 
+  app.ticker.add(delta => gameLoop(delta));
+}
+
+function gameLoop(delta){
+
+  //Update the current game state:
+  state(delta);
+}
+
+function play(delta) {
+
+  //Move the cat 1 pixel to the right each frame
+  cat.vx = 1
+  cat.x += cat.vx;
+}
+
+*/
