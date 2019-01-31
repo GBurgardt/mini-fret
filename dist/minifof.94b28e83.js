@@ -10721,19 +10721,21 @@ var getSimpleNote = function getSimpleNote() {
     elementNote: (0, _utilsService.createElementFromHTML)("<div class=\"simple-note\"></div>"),
     itIsMoving: false
   };
-};
+}; // $(function () {
+// setInterval(() => {
+//     const notes = $(".simple-note");
+//     if (notes && notes.length > 0) {
+//         notes
+//             .css(
+//                 'top', 
+//                 '+=2'
+//             )
+//     }
+// }, 25);
+// })
+
 
 exports.getSimpleNote = getSimpleNote;
-(0, _jquery.default)(function () {
-  setInterval(function () {
-    var notes = (0, _jquery.default)(".simple-note");
-
-    if (notes && notes.length > 0) {
-      notes.css('top', '+=2');
-    }
-  }, 25);
-}); // $(".simple-note").css('top') ? 
-//                             $(".simple-note").css('top') + 5 : 5
 },{"jquery":"node_modules/jquery/dist/jquery.js","./utils-service":"src/services/utils-service.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
@@ -10822,11 +10824,13 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 var _utilsService = require("../../services/utils-service");
 
-var _notesService = require("../../services/notes-service");
+var notesService = _interopRequireWildcard(require("../../services/notes-service"));
 
 require("./minifof.scss");
 
 var _minifofHtml = require("./minifof-html");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10904,11 +10908,7 @@ var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifof
 
   var paused = function paused(delta) {
     console.log('paused');
-  }; // const stop = (delta) => {
-  //     console.log('stop');
-  //     clearInterval(mainIntervalId);
-  // }
-
+  };
   /**
    * All the code that should run at the end of the game
    */
@@ -10922,18 +10922,15 @@ var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifof
   ////////////////////////////////////////////////////////
 
   /**
-   * Carga la tab elegida
+   * Carga la tab elegida. Creo una tab completa en un div y voy moviendo la tab completa?
    */
 
 
   var loadTab = function loadTab() {
     console.log('loadTab'); // Test..
-    // const noteTest = getSimpleNote();
-    // $('.guitar-string.string-1')[0]
-    //     .appendChild(
-    //         noteTest.elementNote
-    //     );
-    // noteTest.itIsMoving = true;
+
+    var noteTest = notesService.getSimpleNote();
+    (0, _jquery.default)('.guitar-string.string-1')[0].appendChild(noteTest.elementNote); // noteTest.itIsMoving = true;
   }; ////////////////////////////////////////////////////////
   //////////////// End Others functions //////////////////
   ////////////////////////////////////////////////////////
@@ -11019,7 +11016,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40191" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38341" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

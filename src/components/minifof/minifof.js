@@ -1,7 +1,7 @@
 // Dependencias
 import $ from "jquery";
 import { createElementFromHTML } from '../../services/utils-service';
-import { getSimpleNote } from '../../services/notes-service';
+import * as notesService from '../../services/notes-service';
 
 // minifof imports
 import './minifof.scss';
@@ -95,10 +95,6 @@ $(function () {
     const paused = (delta) => {
         console.log('paused');
     }
-    // const stop = (delta) => {
-    //     console.log('stop');
-    //     clearInterval(mainIntervalId);
-    // }
 
     /**
      * All the code that should run at the end of the game
@@ -114,18 +110,18 @@ $(function () {
     ////////////////////////////////////////////////////////
 
     /**
-     * Carga la tab elegida
+     * Carga la tab elegida. Creo una tab completa en un div y voy moviendo la tab completa?
      */
     const loadTab = () => {
         console.log('loadTab');
 
         // Test..
-        // const noteTest = getSimpleNote();
+        const noteTest = notesService.getSimpleNote();
 
-        // $('.guitar-string.string-1')[0]
-        //     .appendChild(
-        //         noteTest.elementNote
-        //     );
+        $('.guitar-string.string-1')[0]
+            .appendChild(
+                noteTest.elementNote
+            );
 
         // noteTest.itIsMoving = true;
     }

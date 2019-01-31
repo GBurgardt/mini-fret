@@ -9,25 +9,20 @@ export const getSimpleNote = () => ({
 });
 
 
-$(function () {
+// $(function () {
 
-    setInterval(() => {
-        const notes = $(".simple-note");
+    // setInterval(() => {
+    //     const notes = $(".simple-note");
         
-        if (notes && notes.length > 0) {
-            notes
-                .css(
-                    'top', 
-                    '+=2'
-                )
+    //     if (notes && notes.length > 0) {
+    //         notes
+    //             .css(
+    //                 'top', 
+    //                 '+=2'
+    //             )
                 
-        }
+    //     }
 
-    }, 25);
+    // }, 25);
 
-})
-
-
-
-// $(".simple-note").css('top') ? 
-//                             $(".simple-note").css('top') + 5 : 5
+// })
