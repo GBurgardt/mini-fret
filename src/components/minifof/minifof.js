@@ -2,6 +2,7 @@
 import $ from "jquery";
 import { createElementFromHTML } from '../../services/utils-service';
 import * as notesService from '../../services/notes-service';
+import * as tabsService from '../../services/tabs-service';
 
 // minifof imports
 import './minifof.scss';
@@ -25,7 +26,7 @@ $(function () {
     // Id del intervalo (game loop) principal
     let mainIntervalId;
 
-    // Tab actual
+    // Tab actual (va a ser un super div largo)
     let currentTab;
 
     /**
@@ -115,13 +116,19 @@ $(function () {
     const loadTab = () => {
         console.log('loadTab');
 
-        // Test..
-        const noteTest = notesService.getSimpleNote();
+        currentTab = tabsService.getSampleTab();
 
-        $('.guitar-string.string-1')[0]
-            .appendChild(
-                noteTest.elementNote
-            );
+        vistaMiniFof.appendChild(currentTab);
+
+        debugger;
+
+        // Test..
+        // const noteTest = notesService.getSimpleNote();
+
+        // $('.guitar-string.string-1')[0]
+        //     .appendChild(
+        //         noteTest.elementNote
+        //     );
 
         // noteTest.itIsMoving = true;
     }

@@ -119,4 +119,16 @@ body {
         // Para movimiento
         position: relative;
     }
+
+    /* TODO: Seguir */
+    .sample-tab {
+        display: block;
+        position: absolute;
+        /* left: 0%; */
+        top: -62%;
+        width: 50%;
+        height: 500px;
+        background: brown;
+
+    }
 }

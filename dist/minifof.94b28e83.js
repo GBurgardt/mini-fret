@@ -10736,6 +10736,25 @@ var getSimpleNote = function getSimpleNote() {
 
 
 exports.getSimpleNote = getSimpleNote;
+},{"jquery":"node_modules/jquery/dist/jquery.js","./utils-service":"src/services/utils-service.js"}],"src/services/tabs-service.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getSampleTab = void 0;
+
+var _jquery = _interopRequireDefault(require("jquery"));
+
+var _utilsService = require("./utils-service");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var getSampleTab = function getSampleTab() {
+  return (0, _utilsService.createElementFromHTML)("<div \n            class=\"sample-tab\">\n\n        </div>");
+};
+
+exports.getSampleTab = getSampleTab;
 },{"jquery":"node_modules/jquery/dist/jquery.js","./utils-service":"src/services/utils-service.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
@@ -10826,6 +10845,8 @@ var _utilsService = require("../../services/utils-service");
 
 var notesService = _interopRequireWildcard(require("../../services/notes-service"));
 
+var tabsService = _interopRequireWildcard(require("../../services/tabs-service"));
+
 require("./minifof.scss");
 
 var _minifofHtml = require("./minifof-html");
@@ -10846,7 +10867,7 @@ var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifof
   // Estado del juego
   var state; // Id del intervalo (game loop) principal
 
-  var mainIntervalId; // Tab actual
+  var mainIntervalId; // Tab actual (va a ser un super div largo)
 
   var currentTab;
   /**
@@ -10927,10 +10948,16 @@ var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifof
 
 
   var loadTab = function loadTab() {
-    console.log('loadTab'); // Test..
-
-    var noteTest = notesService.getSimpleNote();
-    (0, _jquery.default)('.guitar-string.string-1')[0].appendChild(noteTest.elementNote); // noteTest.itIsMoving = true;
+    console.log('loadTab');
+    currentTab = tabsService.getSampleTab();
+    vistaMiniFof.appendChild(currentTab);
+    debugger; // Test..
+    // const noteTest = notesService.getSimpleNote();
+    // $('.guitar-string.string-1')[0]
+    //     .appendChild(
+    //         noteTest.elementNote
+    //     );
+    // noteTest.itIsMoving = true;
   }; ////////////////////////////////////////////////////////
   //////////////// End Others functions //////////////////
   ////////////////////////////////////////////////////////
@@ -10989,7 +11016,7 @@ function play(delta) {
 }
 
 */
-},{"jquery":"node_modules/jquery/dist/jquery.js","../../services/utils-service":"src/services/utils-service.js","../../services/notes-service":"src/services/notes-service.js","./minifof.scss":"src/components/minifof/minifof.scss","./minifof-html":"src/components/minifof/minifof-html.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"jquery":"node_modules/jquery/dist/jquery.js","../../services/utils-service":"src/services/utils-service.js","../../services/notes-service":"src/services/notes-service.js","../../services/tabs-service":"src/services/tabs-service.js","./minifof.scss":"src/components/minifof/minifof.scss","./minifof-html":"src/components/minifof/minifof-html.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -11016,7 +11043,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38341" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41689" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
