@@ -15,12 +15,14 @@ body {
   flex-flow: column;
   height: 100%;
   flex: 1 1 auto;
-  /* TODO: Seguir */
 }
 .game-container .pad-container {
   display: flex;
-  width: 100%;
   height: 129px;
+  z-index: 1;
+  border-bottom: solid 9px white;
+  border-top: solid 9px white;
+  margin: 0 6px;
 }
 .game-container .pad-container .pad {
   display: block;
@@ -28,6 +30,7 @@ body {
   width: -moz-available;
   width: -webkit-fill-available;
   width: fill-available;
+  border: solid 1px black;
 }
 .game-container .pad-container .pad-1 {
   background: green;
@@ -46,11 +49,12 @@ body {
 }
 .game-container .pad-container .guitar-pick {
   background: black;
-  margin-left: 1%;
+  border-left: solid 7px white;
 }
 .game-container .stage-container {
   display: flex;
   flex-flow: column;
+  position: relative;
 }
 .game-container .stage-container .string-container {
   display: flex;
@@ -59,7 +63,7 @@ body {
   height: -moz-available;
   height: -webkit-fill-available;
   height: fill-available;
-  margin: 1% auto 0;
+  margin: 0 auto 0;
 }
 .game-container .stage-container .string-container .guitar-string {
   display: block;
@@ -71,14 +75,15 @@ body {
   border: 1px solid;
   border-bottom: none;
 }
-.game-container .frets-container {
+.game-container .stage-container .frets-container {
   display: flex;
   width: 97.8%;
   height: 48px;
   margin: 0 auto;
   border: 1px solid;
+  z-index: 1;
 }
-.game-container .frets-container .fret {
+.game-container .stage-container .frets-container .fret {
   border: 1px solid;
   display: block;
   width: 100%;
@@ -86,22 +91,22 @@ body {
   width: -webkit-fill-available;
   width: fill-available;
 }
-.game-container .frets-container .fret-1 {
+.game-container .stage-container .frets-container .fret-1 {
   background: green;
 }
-.game-container .frets-container .fret-2 {
+.game-container .stage-container .frets-container .fret-2 {
   background: red;
 }
-.game-container .frets-container .fret-3 {
+.game-container .stage-container .frets-container .fret-3 {
   background: yellow;
 }
-.game-container .frets-container .fret-4 {
+.game-container .stage-container .frets-container .fret-4 {
   background: blue;
 }
-.game-container .frets-container .fret-5 {
+.game-container .stage-container .frets-container .fret-5 {
   background: orange;
 }
-.game-container .frets-container .pressed {
+.game-container .stage-container .frets-container .pressed {
   background: #595f5f;
 }
 .game-container .btn-play {
@@ -110,23 +115,41 @@ body {
   left: 43%;
   font-size: 3rem;
 }
-.game-container .simple-note {
-  border: 1px solid;
+.game-container .sample-tab {
+  display: flex;
+  position: absolute;
+  left: 1.1%;
+  top: -170%;
+  width: 97.8%;
+  height: 500px;
+  z-index: 0;
+}
+.game-container .sample-tab .string-default {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+}
+.game-container .sample-tab .string-default .simple-note {
   display: block;
   width: 100%;
   width: -moz-available;
   width: -webkit-fill-available;
   width: fill-available;
-  background: #632e79;
   height: 8%;
-  position: relative;
+  border: 1px solid;
+  margin: 5px;
+  background: #632e79;
 }
-.game-container .sample-tab {
+.game-container .sample-tab .string-default .empty-note {
   display: block;
-  position: absolute;
-  /* left: 0%; */
-  top: -62%;
-  width: 50%;
-  height: 500px;
-  background: brown;
+  width: 100%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: fill-available;
+  height: 8%;
+  margin: 5px;
 }

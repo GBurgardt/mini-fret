@@ -1,28 +1,11 @@
 import $ from "jquery";
 import { createElementFromHTML } from './utils-service'
 
-export const getSimpleNote = () => ({
+export const getSimpleNote = (guitarString, order) => ({
     elementNote: createElementFromHTML(
-        `<div class="simple-note"></div>`
+        `<div id="note-${order}" class="simple-note"></div>`
     ),
-    itIsMoving: false
+    guitarString,
+    length: 1, // Por ahora queda en 1, despues veo esto,
+    order // Nro de nota. En orden de tocada
 });
-
-
-// $(function () {
-
-    // setInterval(() => {
-    //     const notes = $(".simple-note");
-        
-    //     if (notes && notes.length > 0) {
-    //         notes
-    //             .css(
-    //                 'top', 
-    //                 '+=2'
-    //             )
-                
-    //     }
-
-    // }, 25);
-
-// })

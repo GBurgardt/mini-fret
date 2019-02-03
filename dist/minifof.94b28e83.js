@@ -104,7 +104,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"../../../../../usr/local/lib/node_modules/parcel-bundler/node_modules/process/browser.js":[function(require,module,exports) {
+})({"../../../../../usr/local/share/.config/yarn/global/node_modules/process/browser.js":[function(require,module,exports) {
 
 // shim for using process in browser
 var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
@@ -10683,7 +10683,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{"process":"../../../../../usr/local/lib/node_modules/parcel-bundler/node_modules/process/browser.js"}],"src/services/utils-service.js":[function(require,module,exports) {
+},{"process":"../../../../../usr/local/share/.config/yarn/global/node_modules/process/browser.js"}],"src/services/utils-service.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10716,24 +10716,16 @@ var _utilsService = require("./utils-service");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var getSimpleNote = function getSimpleNote() {
+var getSimpleNote = function getSimpleNote(guitarString, order) {
   return {
-    elementNote: (0, _utilsService.createElementFromHTML)("<div class=\"simple-note\"></div>"),
-    itIsMoving: false
-  };
-}; // $(function () {
-// setInterval(() => {
-//     const notes = $(".simple-note");
-//     if (notes && notes.length > 0) {
-//         notes
-//             .css(
-//                 'top', 
-//                 '+=2'
-//             )
-//     }
-// }, 25);
-// })
+    elementNote: (0, _utilsService.createElementFromHTML)("<div id=\"note-".concat(order, "\" class=\"simple-note\"></div>")),
+    guitarString: guitarString,
+    length: 1,
+    // Por ahora queda en 1, despues veo esto,
+    order: order // Nro de nota. En orden de tocada
 
+  };
+};
 
 exports.getSimpleNote = getSimpleNote;
 },{"jquery":"node_modules/jquery/dist/jquery.js","./utils-service":"src/services/utils-service.js"}],"src/services/tabs-service.js":[function(require,module,exports) {
@@ -10742,20 +10734,128 @@ exports.getSimpleNote = getSimpleNote;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getSampleTab = void 0;
+exports.checkIfPressedNote = exports.getSampleTab = void 0;
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
+var notesService = _interopRequireWildcard(require("./notes-service"));
+
 var _utilsService = require("./utils-service");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var getSampleTab = function getSampleTab() {
-  return (0, _utilsService.createElementFromHTML)("<div \n            class=\"sample-tab\">\n\n        </div>");
+  return (0, _utilsService.createElementFromHTML)("\n        <div class=\"sample-tab\">\n\n            <div class=\"string-default string-1\">\n                <div id=\"note-1\" class=\"simple-note\"></div>\n            </div>\n            <div class=\"string-default string-2\">\n                <div id=\"note-2\" class=\"simple-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div id=\"note-3\" class=\"simple-note\"></div>\n                <div class=\"empty-note\"></div>\n            </div>\n            <div class=\"string-default string-3\">\n                <div id=\"note-4\" class=\"simple-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n            </div>\n            <div class=\"string-default string-4\">\n            <div id=\"note-5\" class=\"simple-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n                <div class=\"empty-note\"></div>\n            </div>\n            <div class=\"string-default string-5\">\n                \n            </div>\n\n        </div>\n        ");
 };
+/**
+ * Checkea si hay presionado un fret y se presiona asterisco. Y checkea si justo ese fret esta sobre una nota
+ * Retorna la nota?
+ */
+
 
 exports.getSampleTab = getSampleTab;
-},{"jquery":"node_modules/jquery/dist/jquery.js","./utils-service":"src/services/utils-service.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+
+var checkIfPressedNote = function checkIfPressedNote(keysMap) {
+  // Al offset de las notas le tengo que restar el tamaño del pad (mas sus margenes, bordes y padding)
+  var heightPadAux = (0, _jquery.default)('.pad-container').height() + 9 + 9 + 6 + 1; // Teclas que se estan presionando en este instante
+
+  var keysPressed = Object.keys(keysMap).filter(function (k) {
+    return keysMap[k];
+  }); // Si hay 2 o mas teclas presionandose..
+
+  if (keysPressed && keysPressed.length >= 2) {
+    // Posicion/es del/os fret/frets presionado/s
+    var posiFrets = keysPressed.filter(function (kp) {
+      return kp !== "106";
+    }).map(function (f) {
+      return document.getElementsByClassName("fret-".concat(Number(f) - 50 + 2))[0].getBoundingClientRect();
+    }); // Posicion de las notas de la tab actual
+
+    var notes = Array.from(document.getElementsByClassName('simple-note')).map(function (domElement) {
+      return {
+        domElement: domElement,
+        rect: domElement.getBoundingClientRect()
+      };
+    });
+    var currentFret = posiFrets[0];
+    var noteTaped = notes.find(function (pn) {
+      return checkOverlap(pn.rect, currentFret);
+    });
+
+    if (noteTaped) {
+      console.log('OK');
+    }
+  }
+};
+
+exports.checkIfPressedNote = checkIfPressedNote;
+
+var checkOverlap = function checkOverlap(rect1, rect2) {
+  return !(rect1.right < rect2.left || rect1.left > rect2.right || rect1.bottom < rect2.top || rect1.top > rect2.bottom);
+};
+/*
+ // Si hay 2 o mas teclas presionandose..
+if (keysPressed && keysPressed.length >= 2) {
+    
+    // Posicion/es del/os fret/frets presionado/s
+    const posiFrets = keysPressed
+        .filter(
+            kp => kp !== "106"
+        )
+        .map(
+            f => $(
+                `.fret.fret-${
+                    Number(f) - 50 + 2
+                }`
+            )
+        )
+        .map(
+            fElement => fElement.position()
+        )
+     
+    
+    // Posicion de las notas de la tab actual
+    const posiNotes = $('.simple-note').get()
+        .map(
+            n => $(n).offset()
+        )
+        .map(
+            posi => ({
+                ...posi,
+                top: posi.top - heightPadAux
+            })
+        )
+    
+     const currentFret = posiFrets[0];
+     const test = posiNotes
+        .some(
+            pn => 
+                pn.top > (currentFret.top - 20) &&
+                pn.top < (currentFret.top + 20)
+        )
+     if (test) {
+        console.log('OK');
+    }
+ }
+  */
+},{"jquery":"node_modules/jquery/dist/jquery.js","./notes-service":"src/services/notes-service.js","./utils-service":"src/services/utils-service.js"}],"src/services/controls-service.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleKeyPressed = void 0;
+
+var _utilsService = require("./utils-service");
+
+var handleKeyPressed = function handleKeyPressed(e) {
+  return e && e.keyCode && (e.keyCode === 49 || e.keyCode === 50 || e.keyCode === 51 || e.keyCode === 52 || e.keyCode === 53) ? 'pressed' : '';
+};
+
+exports.handleKeyPressed = handleKeyPressed;
+},{"./utils-service":"src/services/utils-service.js"}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
@@ -10787,7 +10887,7 @@ function getBaseURL(url) {
 
 exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
-},{}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+},{}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
 var bundle = require('./bundle-url');
 
 function updateLink(link) {
@@ -10822,12 +10922,12 @@ function reloadCSS() {
 }
 
 module.exports = reloadCSS;
-},{"./bundle-url":"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/minifof/minifof.scss":[function(require,module,exports) {
+},{"./bundle-url":"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"src/components/minifof/minifof.scss":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/minifof/minifof-html.js":[function(require,module,exports) {
+},{"_css_loader":"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"src/components/minifof/minifof-html.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -10843,9 +10943,9 @@ var _jquery = _interopRequireDefault(require("jquery"));
 
 var _utilsService = require("../../services/utils-service");
 
-var notesService = _interopRequireWildcard(require("../../services/notes-service"));
-
 var tabsService = _interopRequireWildcard(require("../../services/tabs-service"));
+
+var controlsService = _interopRequireWildcard(require("../../services/controls-service"));
 
 require("./minifof.scss");
 
@@ -10858,7 +10958,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Dependencias
 // minifof imports
 // HTML / Vista
-var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifofHtml); // On init..
+var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifofHtml); // Una vez iniciada la vista..
 
 (0, _jquery.default)(function () {
   ////////////////////////////////////////////////////////
@@ -10920,20 +11020,23 @@ var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifof
     // Por ahora dejo un setInterval
     mainIntervalId = setInterval(function () {
       state && state(delta);
-    }, 200);
+    }, 15);
   };
 
   var play = function play(delta) {
-    console.log('play');
+    // console.log('play');
+    // Muevo la current tab para abajo..
+    if (currentTab && (0, _jquery.default)(currentTab).css) {
+      (0, _jquery.default)(currentTab).css('top', '+=.7%');
+    }
   };
 
-  var paused = function paused(delta) {
-    console.log('paused');
-  };
+  var paused = function paused(delta) {} // console.log('paused');
+
   /**
    * All the code that should run at the end of the game
    */
-
+  ;
 
   var end = function end() {}; ////////////////////////////////////////////////////////
   /////////////////// End Life Cycle /////////////////////
@@ -10948,40 +11051,81 @@ var vistaMiniFof = (0, _utilsService.createElementFromHTML)(_minifofHtml.minifof
 
 
   var loadTab = function loadTab() {
-    console.log('loadTab');
     currentTab = tabsService.getSampleTab();
-    vistaMiniFof.appendChild(currentTab);
-    debugger; // Test..
-    // const noteTest = notesService.getSimpleNote();
-    // $('.guitar-string.string-1')[0]
-    //     .appendChild(
-    //         noteTest.elementNote
-    //     );
-    // noteTest.itIsMoving = true;
+    var stageContainer = (0, _jquery.default)('.stage-container') && (0, _jquery.default)('.stage-container')[0] ? (0, _jquery.default)('.stage-container')[0] : null;
+    stageContainer.appendChild(currentTab);
   }; ////////////////////////////////////////////////////////
   //////////////// End Others functions //////////////////
   ////////////////////////////////////////////////////////
   // Inicializo
 
 
-  init();
+  init(); ////////////////////////////////////////////////////////
+  ///////////////// CONTROLES | EVENTOS /////////////////
+  ////////////////////////////////////////////////////////
+
+  var keysMap = {}; // You could also use an array
+
+  onkeydown = onkeyup = function onkeyup(e) {
+    e = e || event;
+    keysMap[e.keyCode] = e.type == 'keydown'; // Si se presionó asterisco
+
+    if (e.keyCode === 106) {
+      tabsService.checkIfPressedNote(keysMap);
+    } else {
+      // Fret actual
+      var currentFret = (0, _jquery.default)(".fret.fret-".concat(e.keyCode - 50 + 2)); // Efecto visual de presionado
+
+      currentFret[e.type == 'keydown' ? 'addClass' : 'removeClass'](controlsService.handleKeyPressed(e));
+    }
+  };
 }); // Evento 'keydown'
+// document.addEventListener(
+//     'keydown',
+//     e => {
+//         // Fret actual
+//         const currentFret = $(
+//             `.fret.fret-${
+//             e.keyCode - 50 + 2
+//             }`
+//         );
+//         // Efecto visual de presionado
+//         currentFret.addClass(
+//             controlsService.handleKeyPressed(e)
+//         );
+//     },
+//     false
+// );
+// // Evento 'keyup'
+// document.addEventListener(
+//     'keyup',
+//     e => {
+//         $(
+//             `.fret.fret-${
+//             e.keyCode - 50 + 2
+//             }`
+//         ).removeClass(
+//             controlsService.handleKeyPressed(e)
+//         );
+//     },
+//     false
+// );
+// // Evento 'keyup'
+// document.addEventListener(
+//     'keydown',
+//     e => {
+//         console.log(e)
+//         // Fret actual
+//         // const currentFret = $(
+//         //     `.fret.fret-${
+//         //     e.keyCode - 50 + 2
+//         //     }`
+//         // );
+//         // tabsService.checkIfPressedNote(currentFret, currentTab);
+//     },
+//     false
+// );
 
-document.addEventListener('keydown', function (e) {
-  var keycode = e.keyCode;
-
-  if (keycode === 49 || keycode === 50 || keycode === 51 || keycode === 52 || keycode === 53) {
-    (0, _jquery.default)(".fret.fret-".concat(keycode - 50 + 2)).addClass('pressed');
-  }
-}, false); // Evento 'keyup'
-
-document.addEventListener('keyup', function (e) {
-  var keycode = e.keyCode;
-
-  if (keycode === 49 || keycode === 50 || keycode === 51 || keycode === 52 || keycode === 53) {
-    (0, _jquery.default)(".fret.fret-".concat(keycode - 50 + 2)).removeClass('pressed');
-  }
-}, false);
 /* Interesting example
 //Define any variables that are used in more than one function
 let cat, state;
@@ -11016,7 +11160,7 @@ function play(delta) {
 }
 
 */
-},{"jquery":"node_modules/jquery/dist/jquery.js","../../services/utils-service":"src/services/utils-service.js","../../services/notes-service":"src/services/notes-service.js","../../services/tabs-service":"src/services/tabs-service.js","./minifof.scss":"src/components/minifof/minifof.scss","./minifof-html":"src/components/minifof/minifof-html.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"jquery":"node_modules/jquery/dist/jquery.js","../../services/utils-service":"src/services/utils-service.js","../../services/tabs-service":"src/services/tabs-service.js","../../services/controls-service":"src/services/controls-service.js","./minifof.scss":"src/components/minifof/minifof.scss","./minifof-html":"src/components/minifof/minifof-html.js"}],"../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -11043,7 +11187,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41689" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36885" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
@@ -11185,5 +11329,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.parcelRequire, id);
   });
 }
-},{}]},{},["../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/components/minifof/minifof.js"], null)
+},{}]},{},["../../../../../usr/local/share/.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/components/minifof/minifof.js"], null)
 //# sourceMappingURL=/minifof.94b28e83.map

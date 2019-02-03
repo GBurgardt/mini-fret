@@ -1,8 +1,8 @@
 // Dependencias
 import $ from "jquery";
 import { createElementFromHTML } from '../../services/utils-service';
-import * as notesService from '../../services/notes-service';
 import * as tabsService from '../../services/tabs-service';
+import * as controlsService from '../../services/controls-service';
 
 // minifof imports
 import './minifof.scss';
@@ -13,7 +13,7 @@ const vistaMiniFof = createElementFromHTML(
     minifofHtml
 );
 
-// On init..
+// Una vez iniciada la vista..
 $(function () {
 
     ////////////////////////////////////////////////////////
@@ -86,15 +86,26 @@ $(function () {
         mainIntervalId = setInterval(() => {
             state && 
                 state(delta);
-        }, 200);
+        }, 15);
     }
 
     const play = (delta) => {
-        console.log('play');
+        // console.log('play');
+
+        // Muevo la current tab para abajo..
+        if (currentTab && $(currentTab).css) {
+            $(currentTab)
+                .css(
+                    'top', 
+                    '+=.7%'
+                )
+                
+        }
+
     }
 
     const paused = (delta) => {
-        console.log('paused');
+        // console.log('paused');
     }
 
     /**
@@ -114,23 +125,12 @@ $(function () {
      * Carga la tab elegida. Creo una tab completa en un div y voy moviendo la tab completa?
      */
     const loadTab = () => {
-        console.log('loadTab');
-
         currentTab = tabsService.getSampleTab();
 
-        vistaMiniFof.appendChild(currentTab);
+        const stageContainer = $('.stage-container') && $('.stage-container')[0] ? $('.stage-container')[0] : null
 
-        debugger;
-
-        // Test..
-        // const noteTest = notesService.getSimpleNote();
-
-        // $('.guitar-string.string-1')[0]
-        //     .appendChild(
-        //         noteTest.elementNote
-        //     );
-
-        // noteTest.itIsMoving = true;
+        stageContainer.appendChild(currentTab);
+        
     }
 
     ////////////////////////////////////////////////////////
@@ -140,62 +140,112 @@ $(function () {
     // Inicializo
     init();
 
+
+    ////////////////////////////////////////////////////////
+    ///////////////// CONTROLES | EVENTOS /////////////////
+    ////////////////////////////////////////////////////////
+
+    let keysMap = {}; // You could also use an array
+    onkeydown = onkeyup = function(e){
+        e = e || event; 
+        keysMap[e.keyCode] = e.type == 'keydown';
+
+        // Si se presionó asterisco
+        if (e.keyCode === 106) {
+
+            tabsService.checkIfPressedNote(keysMap);
+
+        } else {
+            // Fret actual
+           const currentFret = $(
+               `.fret.fret-${
+               e.keyCode - 50 + 2
+               }`
+           );
+    
+           // Efecto visual de presionado
+           currentFret[
+               e.type == 'keydown' ? 
+                   'addClass'
+                   :
+                   'removeClass'
+           ](controlsService.handleKeyPressed(e));
+        }
+
+
+    }
+
+
 });
 
 
 
 
-// Evento 'keydown'
-document.addEventListener(
-    'keydown',
-    e => {
-        var keycode = e.keyCode;
-
-        if (
-            keycode === 49 ||
-            keycode === 50 ||
-            keycode === 51 ||
-            keycode === 52 ||
-            keycode === 53
-        ) {
-            $(
-                `.fret.fret-${
-                keycode - 50 + 2
-                }`
-            ).addClass('pressed');
-        }
-    },
-    false
-);
-
-// Evento 'keyup'
-document.addEventListener(
-    'keyup',
-    e => {
-        var keycode = e.keyCode;
-
-        if (
-            keycode === 49 ||
-            keycode === 50 ||
-            keycode === 51 ||
-            keycode === 52 ||
-            keycode === 53
-        ) {
-            $(
-                `.fret.fret-${
-                keycode - 50 + 2
-                }`
-            ).removeClass('pressed')
-        }
-    },
-    false
-);
 
 
 
 
 
 
+
+
+
+
+
+
+    // Evento 'keydown'
+    // document.addEventListener(
+    //     'keydown',
+    //     e => {
+
+    //         // Fret actual
+    //         const currentFret = $(
+    //             `.fret.fret-${
+    //             e.keyCode - 50 + 2
+    //             }`
+    //         );
+
+    //         // Efecto visual de presionado
+    //         currentFret.addClass(
+    //             controlsService.handleKeyPressed(e)
+    //         );
+    //     },
+    //     false
+    // );
+
+    // // Evento 'keyup'
+    // document.addEventListener(
+    //     'keyup',
+    //     e => {
+    //         $(
+    //             `.fret.fret-${
+    //             e.keyCode - 50 + 2
+    //             }`
+    //         ).removeClass(
+    //             controlsService.handleKeyPressed(e)
+    //         );
+    //     },
+    //     false
+    // );
+
+    // // Evento 'keyup'
+    // document.addEventListener(
+    //     'keydown',
+    //     e => {
+
+    //         console.log(e)
+
+    //         // Fret actual
+    //         // const currentFret = $(
+    //         //     `.fret.fret-${
+    //         //     e.keyCode - 50 + 2
+    //         //     }`
+    //         // );
+
+    //         // tabsService.checkIfPressedNote(currentFret, currentTab);
+    //     },
+    //     false
+    // );
 
 
 
